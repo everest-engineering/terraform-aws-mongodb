@@ -9,12 +9,12 @@ This module creates the following resources required for mongo container to be u
 3. Roles required for EC2 to execute the task
 4. EBS volume for persistent storage of mongo container
 
-###Approach: 
+### Approach: 
 
 This approach creates an ECS task for mongo and runs/manages that task on EC2 instance of provided instance type. This mongo task
 uses a docker plugin called `rexray/ebs` to provision and use EBS volume for persistent storage of mongo container. 
 
-####Pros:
+#### Pros:
 1. Simplified mongo infra management with just Terraform
 2. Mongo task gets restarted automatically in case of failure
 3. Easy version upgrades with minimal downtime
@@ -22,7 +22,7 @@ uses a docker plugin called `rexray/ebs` to provision and use EBS volume for per
 5. Built-in ECS monitoring provided in ECS dashboard
 6. Data volume will not be lost unless deleted manually.
 
-####Cons: 
+#### Cons: 
 1. Rolling deployments are not supported yet due to mongo single instance limitation.
 2. EBS volume size should be chosen carefully because it is not possible to expand it later as it is managed by docker plugin
 
