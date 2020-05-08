@@ -13,7 +13,7 @@
     ],
     "mountPoints": [
       {
-        "sourceVolume": "mongo",
+        "sourceVolume": "${volume_name}",
         "containerPath": "/data/db"
       }
     ]
