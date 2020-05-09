@@ -44,5 +44,6 @@ data "template_file" "container_definition" {
     mongo_version = var.mongo_version
     mongo_container_cpu = var.mongo_container_cpu
     mongo_container_memory = var.mongo_container_memory
+    volume_name = var.name
   }
 }
