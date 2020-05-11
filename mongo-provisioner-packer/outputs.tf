@@ -44,5 +44,5 @@ output "tags" {
 }
 
 output "mongo_connect_url" {
-  value = "mongodb://${aws_instance.mongodb.public_ip}:27017/"
+  value = "mongodb://${aws_instance.mongodb.public_ip}:27017"
 }

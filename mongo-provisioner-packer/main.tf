@@ -21,10 +21,5 @@ resource "aws_instance" "mongodb" {
 		associate_public_ip_address = var.associate_public_ip_address
 		tags = var.tags
 		user_data= data.template_file.user_data.rendered
-
-    root_block_device {
-      delete_on_termination = false
-    }
-
 }
 		
