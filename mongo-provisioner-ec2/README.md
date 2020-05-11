@@ -35,7 +35,7 @@ So a better approach would be to store MongoDB data on externally created EBS vo
 
 You can provision EBS volume as follows:
 
-* Configure **region**, **availability_zone**, **volume type**, **volume size** in **ebs-setup/main.tf** as follows:**
+* Configure **region**, **availability_zone**, **volume type**, **volume size** as in **ebs-onetime-setup/main.tf** as follows:
 
 ```hcl-terraform
 provider "aws" {
@@ -56,8 +56,8 @@ resource "aws_ebs_volume" "mongo-data-vol" {
 * **Create EBS volume:**
 
 ```shell script
-cd ebs-setup
-ebs-setup> terraform apply
+cd ebs-onetime-setup
+ebs-onetime-setup> terraform apply
 ...
 ...
 Outputs:
@@ -68,7 +68,7 @@ ebs-vol-id = vol-082d1c33d045fgt98
 
 ## How to use this module?
 
-Use the EBS volume id and availability_zone output values from previous step and configure them as local variables.
+Use the `ebs-vol-id` and `availability_zone` output values from previous step and configure them as local variables.
 
 1. Create a file **terraform-mongo-example/main.tf** as follows:
 
@@ -100,7 +100,7 @@ module "mongodb" {
   ami_filter_name   = "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"
   ebs_volume_id     = local.ebs_volume_id
   availability_zone = local.availability_zone
-  volume_size       = "8"
+  mongodb_version   = "4.2"
   private_key       = file("~/.ssh/id_rsa")
   public_key        = file("~/.ssh/id_rsa.pub")
   environment_tag   = "terraform-mongo-test"
@@ -138,6 +138,28 @@ terraform apply
 cd terraform-provider-mongodb/examples/standalone-mongodb-ec2
 terraform destroy
 ```
+
+### Inputs
+| Name              | Description                               | Type  | Default | Required | 
+| ----------------- | :--------------------------------         | ------| -------| ---------|
+| vpc_id	        | The VPC ID to launch in                   | 	string | n/a  | yes
+| subnet_id	        | The VPC Subnet ID to launch in            | 	string | n/a  | yes
+| ebs_volume_id	    | The id of existing EBS volume 	        |   string | n/a | 	yes
+| availability_zone | The availability zone in which EC2 should be provisioned. This should be same as EBS volume AZ | 	string	 | n/a | 	yes
+| private_key       | Path to private key file                  |   string | n/a | yes
+| public_key        | Path to public key file                   |   string | n/a | yes
+| instance_type	    | The type of instance to start             | 	string | "t2.micro"	 | no
+| ami	            | ID of AMI to use for the instance         | 	string | ""	 | no
+| ami_filter_name   | AMI selection filter by name. This will be ignored if `ami` value is specified | 	string | "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*" | 	no
+| mongodb_version   | MongoDB version to install                | 	string | "4.2" | 	no
+| environment_tag   | Tag for EC2                               |   string | "Production" | no
+
+### Outputs
+
+| Name | Description | 
+| ------ | ----------| 
+| mongo_server_public_ip | Public IP of provisioned MongoDB server | 
+| mongo_connect_url | MongoDB Connect URL (Ex: mongodb://<PUBLIC_IP>:27017 | 
 
 ## Testing
 

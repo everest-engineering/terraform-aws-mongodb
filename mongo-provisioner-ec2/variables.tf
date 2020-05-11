@@ -42,12 +42,6 @@ variable "mongodb_version" {
   default     = "4.2"
 }
 
-variable "volume_size" {
-  type        = string
-  description = "Size of the DB storage volume."
-  default     = "10"
-}
-
 variable "environment_tag" {
   type        = string
   description = "Environment tag"

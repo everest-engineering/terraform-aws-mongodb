@@ -25,8 +25,7 @@ module "mongodb" {
   ami_filter_name   = "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"
   ebs_volume_id     = local.ebs_volume_id
   availability_zone = local.availability_zone
-  volume_size       = "8"
-  mongodb_version   = "4.0"
+  mongodb_version   = "4.2"
   private_key       = file("~/.ssh/id_rsa")
   public_key        = file("~/.ssh/id_rsa.pub")
   environment_tag   = "terraform-mongo-test"
