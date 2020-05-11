@@ -3,7 +3,7 @@
 			"region":         "ap-south-1",
 			"base_ami": "ami-0fd7e4b8e94538bef",
 			"mongo_version": "4.2",
-			"version": "v1.0"
+			"version": "v2.0"
 	},
 	"builders": [
 			{
@@ -24,6 +24,11 @@
 		{
 			"type": "shell",
 			"script": "./scripts/shutdown-apt-services.sh"
+	},
+	{
+		"type": "file",
+		"source": "./scripts/conf/mongod.conf",
+		"destination": "/tmp/mongod.conf"
 	},
 		{
 					"type": "shell",

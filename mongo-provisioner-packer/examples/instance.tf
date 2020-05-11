@@ -1,7 +1,7 @@
 module "terraform-mongodb" {
   source = "../"
   instance_type = "t2.micro"
-  ami = "ami-0f157b14eb16e6769"
+  ami = "ami-025a6980e480783c1"
   subnet_id = aws_subnet.main-subnet-public-1.id
   vpc_security_group_ids=[aws_security_group.sg_mongodb.id]
   key_name="deployer-key1"
