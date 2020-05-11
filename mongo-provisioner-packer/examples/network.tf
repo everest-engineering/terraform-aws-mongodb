@@ -33,7 +33,7 @@ resource "aws_route_table_association" "main-crta-public-subnet-1"{
     route_table_id = aws_route_table.main-public-crt.id
 }
 
-resource "aws_security_group" "ssh-allowed" {
+resource "aws_security_group" "sg_mongodb" {
     vpc_id = aws_vpc.main-vpc.id
     
     egress {
@@ -42,6 +42,15 @@ resource "aws_security_group" "ssh-allowed" {
         protocol = -1
         cidr_blocks = ["0.0.0.0/0"]
     }
+
+    ingress {
+        from_port = 27017
+        to_port   = 27017
+        protocol  = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+        description = "MongoDB access"
+    }
+
     ingress {
         from_port = 22
         to_port = 22
@@ -49,6 +58,6 @@ resource "aws_security_group" "ssh-allowed" {
       	cidr_blocks = ["0.0.0.0/0"]
     }
     tags = {
-        Name = "ssh-db-allowed"
+        Name = "mongodb access"
     }
 }
