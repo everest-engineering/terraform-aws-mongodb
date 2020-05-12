@@ -17,12 +17,17 @@ func TestTerraformAwsExample(t *testing.T) {
 	t.Parallel()
     terraformOptions := &terraform.Options{
     		// The path to where our Terraform code is located
-    		TerraformDir: "../examples/standalone-mongodb-ec2",
+    		TerraformDir: "../examples/mongodb-in-public-subnet",
+    		// Variables to pass to our Terraform code using -var options
+            Vars: map[string]interface{}{
+                "ebs_volume_id": "YOUR_VOLUME_ID",
+            },
     }
     defer terraform.Destroy(t, terraformOptions)
     terraform.InitAndApply(t, terraformOptions)
-    mongodbConnectUrl := terraform.Output(t, terraformOptions, "mongo_connect_url")
-    fmt.Println("mongodbConnectUrl: ", mongodbConnectUrl)
+    mongodbPublicIp := terraform.Output(t, terraformOptions, "mongo_server_ip_address")
+    fmt.Println("mongodb public ip: ", mongodbPublicIp)
+    mongodbConnectUrl := "mongodb://"+mongodbPublicIp+":27017"
     client, err := mongo.NewClient(options.Client().ApplyURI(mongodbConnectUrl))
     assert.Nil(t, err)
 

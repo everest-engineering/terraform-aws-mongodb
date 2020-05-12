@@ -63,7 +63,7 @@ ebs-onetime-setup> terraform apply
 Outputs:
 
 availability_zone = us-east-1a
-ebs-vol-id = vol-082d1c33d045fgt98
+ebs-vol-id = vol-XXXXXXXXXXXXXXXX
 ```
 
 ## How to use this module?
@@ -80,7 +80,7 @@ provider "aws" {
 
 locals {
   availability_zone = "us-east-1a"
-  ebs_volume_id     = "vol-082d1c33d045fgt98"
+  ebs_volume_id     = "vol-XXXXXXXXXXXXXXXX"
 }
 
 data "aws_vpc" "default" {
@@ -109,10 +109,10 @@ module "mongodb" {
 output "mongo_server_public_ip" {
   value = module.mongodb.mongo_server_public_ip
 }
-
-output "mongo_connect_url" {
-  value = module.mongodb.mongo_connect_url
+output "mongo_server_private_ip" {
+  value = module.mongodb.mongo_server_private_ip
 }
+
 ```
 
 2. Configure AWS Credentials as environment variables:
@@ -126,7 +126,7 @@ export AWS_DEFAULT_REGION="REGION_HERE"
 3. Provision MongoDB on AWS:
 
 ```shell script
-cd terraform-provider-mongodb/examples/standalone-mongodb-ec2
+cd terraform-provider-mongodb/examples/mongodb-in-public-subnet
 terraform init
 terraform plan
 terraform apply
@@ -135,7 +135,7 @@ terraform apply
 4. Destroy the provisioned infrastructure:
 
 ```shell script
-cd terraform-provider-mongodb/examples/standalone-mongodb-ec2
+cd terraform-provider-mongodb/examples/mongodb-in-public-subnet
 terraform destroy
 ```
 
@@ -148,6 +148,7 @@ terraform destroy
 | availability_zone | The availability zone in which EC2 should be provisioned. This should be same as EBS volume AZ | 	string	 | n/a | 	yes
 | private_key       | Path to private key file                  |   string | n/a | yes
 | public_key        | Path to public key file                   |   string | n/a | yes
+| bastion_host      | Bastion host Public IP                    |   string | n/a | yes
 | instance_type	    | The type of instance to start             | 	string | "t2.micro"	 | no
 | ami	            | ID of AMI to use for the instance         | 	string | ""	 | no
 | ami_filter_name   | AMI selection filter by name. This will be ignored if `ami` value is specified | 	string | "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*" | 	no
@@ -158,8 +159,8 @@ terraform destroy
 
 | Name | Description | 
 | ------ | ----------| 
-| mongo_server_public_ip | Public IP of provisioned MongoDB server | 
-| mongo_connect_url | MongoDB Connect URL (Ex: mongodb://<PUBLIC_IP>:27017 | 
+| mongo_server_public_ip    | Public IP of provisioned MongoDB server | 
+| mongo_server_private_ip   | Private IP of provisioned MongoDB server | 
 
 ## Testing
 
