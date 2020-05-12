@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 module "bastion_network" {
-  source = "./bastion/network"
+  source = "../bastion/network"
 
   bastion_cidr         = "10.0.0.0/16"
   bastion_private_cidr = "10.0.2.0/24"
