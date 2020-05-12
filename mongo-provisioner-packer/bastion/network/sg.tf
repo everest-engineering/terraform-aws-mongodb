@@ -1,6 +1,6 @@
 resource "aws_security_group" "bastion_sg" {
   description = "Enable HTTP ingress"
-  vpc_id      = "${aws_vpc.bastion_vpc.id}"
+  vpc_id      = aws_vpc.bastion_vpc.id
 
   ingress {
     from_port   = 22
@@ -35,38 +35,38 @@ resource "aws_security_group" "bastion_sg" {
 
 resource "aws_security_group" "bastion_private_sg" {
   description = "Enable HTTP ingress"
-  vpc_id      = "${aws_vpc.bastion_vpc.id}"
+  vpc_id      = aws_vpc.bastion_vpc.id
 
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["${var.bastion_cidr}"]
+    cidr_blocks = [var.bastion_cidr]
   }
   ingress {
     from_port   = 27017
     to_port     = 27017
     protocol    = "tcp"
-    cidr_blocks = ["${var.bastion_cidr}"]
+    cidr_blocks = [var.bastion_cidr]
   }
   ingress {
     from_port   = -1
     to_port     = -1
     protocol    = "icmp"
-    cidr_blocks = ["${var.bastion_cidr}"]
+    cidr_blocks = [var.bastion_cidr]
   }
 
   egress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["${var.bastion_cidr}"]
+    cidr_blocks = [var.bastion_cidr]
   }
   egress {
     from_port   = 27017
     to_port     = 27017
     protocol    = "tcp"
-    cidr_blocks = ["${var.bastion_cidr}"]
+    cidr_blocks = [var.bastion_cidr]
   }
   egress {
     from_port   = 0
@@ -78,7 +78,7 @@ resource "aws_security_group" "bastion_private_sg" {
     from_port   = -1
     to_port     = -1
     protocol    = "icmp"
-    cidr_blocks = ["${var.bastion_cidr}"]
+    cidr_blocks = [var.bastion_cidr]
   }
 
   tags = {
