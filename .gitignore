@@ -2,6 +2,11 @@
 mongo-provisioner-ecs/examples/backend.tf
 mongo-provisioner-ecs/examples/.terraform
 
+.terraform
+*.tfstate
+*.tfstate.*
+config.tfvars
+
 #IDE files
 .idea
-
+*.iml
