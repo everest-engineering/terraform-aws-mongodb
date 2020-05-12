@@ -80,7 +80,10 @@ Find an example of ECS cluster for mongo [here](examples/mongo_cluster.tf)
 | Name | Description |
 |------|-------------|
 |ecs\_cluster\_arn | The `arn` of mongo ECS cluster  |
-|mongo\_instance\_ip | The private `IPV4` address of mongo instance to connect to mongodb  |
+|ecs\_cluster\_name | The `name` of mongo ECS cluster  |
+|ecs\_cluster\_region | The `region` where mongo ECS cluster is created |
+|mongo\_instance\_private\_ip | The private `IPV4` address of mongo instance to connect to mongodb  |
+|mongo\_instance\_public\_ip | The public `IPV4` address of mongo instance to connect to mongodb (If created in public subnet)  |
 
 ## Authors
 
