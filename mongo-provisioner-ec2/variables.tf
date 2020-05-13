@@ -57,3 +57,9 @@ variable "private_key" {
   type        = string
   description = "Private key"
 }
+
+variable "bastion_host" {
+  type        = string
+  description = "Bastion host IP"
+  default = ""
+}
