@@ -115,6 +115,27 @@ output "mongo_server_private_ip" {
 
 ```
 
+> Note:  If the specified subnet is a public subnet then MongoDB server can be provisioned using SSH directly. 
+If the specified subnet is a private subnet then a Bastion host(a.k.a Jump host) IP address needs to be provided 
+in order to provision MongoDB using SSH.
+
+```hcl-terraform
+module "mongodb" {
+  source            = "path/to/module"
+  vpc_id            = data.aws_vpc.default.id
+  subnet_id         = data.aws_subnet.subnet.id
+  instance_type     = "t2.micro"
+  ami_filter_name   = "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"
+  ebs_volume_id     = local.ebs_volume_id
+  availability_zone = local.availability_zone
+  mongodb_version   = "4.2"
+  private_key       = file("~/.ssh/id_rsa")
+  public_key        = file("~/.ssh/id_rsa.pub")
+  bastion_host      = "BASTION_HOST_IP_HERE"
+  environment_tag   = "terraform-mongo-test"
+}
+```
+
 2. Configure AWS Credentials as environment variables:
 
 ```shell script
