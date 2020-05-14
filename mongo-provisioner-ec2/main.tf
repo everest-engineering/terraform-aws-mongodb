@@ -4,34 +4,37 @@ data "aws_ami" "ami" {
   filter {
     name = "name"
     values = [
-      var.ami_filter_name]
+    var.ami_filter_name]
   }
 
   filter {
     name = "virtualization-type"
     values = [
-      "hvm"]
+    "hvm"]
   }
 
   filter {
     name = "root-device-type"
     values = [
-      "ebs"]
+    "ebs"]
   }
   owners = [
-    "099720109477"]
+  "099720109477"]
   # Canonical
+}
+
+data "aws_vpc" "selected_vpc" {
+  id = var.vpc_id
 }
 
 resource "aws_security_group" "sg_mongodb" {
   name   = "sg_mongodb"
-  vpc_id = var.vpc_id
+  vpc_id = data.aws_vpc.selected_vpc.id
   ingress {
-    from_port = 22
-    to_port   = 22
-    protocol  = "tcp"
-    cidr_blocks = [
-      "0.0.0.0/0"]
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
     description = "SSH access"
   }
 
@@ -40,7 +43,7 @@ resource "aws_security_group" "sg_mongodb" {
     to_port   = 27017
     protocol  = "tcp"
     cidr_blocks = [
-      "0.0.0.0/0"]
+    "0.0.0.0/0"]
     description = "MongoDB access"
   }
 
@@ -49,10 +52,10 @@ resource "aws_security_group" "sg_mongodb" {
     to_port   = 0
     protocol  = "-1"
     cidr_blocks = [
-      "0.0.0.0/0"]
+    "0.0.0.0/0"]
   }
   tags = {
-    Name = var.environment_tag
+    Name        = var.environment_tag
     Environment = var.environment_tag
   }
 }
@@ -71,15 +74,17 @@ resource "aws_instance" "mongo_server" {
   availability_zone      = var.availability_zone
 
   tags = {
-    Name = var.environment_tag
+    Name        = var.environment_tag
     Environment = var.environment_tag
   }
 
   connection {
-    host        = self.public_ip
-    type        = "ssh"
-    user        = "ubuntu"
-    private_key = var.private_key
+    host         = var.bastion_host == "" ? self.private_ip: self.public_ip
+    type         = "ssh"
+    user         = "ubuntu"
+    private_key  = var.private_key
+    bastion_host = length(var.bastion_host) > 0 ? var.bastion_host : ""
+    agent        = true
   }
 
   provisioner "file" {
@@ -98,16 +103,18 @@ resource "aws_instance" "mongo_server" {
 
 resource "aws_volume_attachment" "mongo-data-vol-attachment" {
   device_name = "/dev/xvdh"
-  volume_id = var.ebs_volume_id
+  volume_id   = var.ebs_volume_id
   instance_id = aws_instance.mongo_server.id
 
   skip_destroy = true
 
   connection {
-    host        = aws_instance.mongo_server.public_ip
-    type        = "ssh"
-    user        = "ubuntu"
-    private_key = var.private_key
+    host         = var.bastion_host == "" ? aws_instance.mongo_server.private_ip: aws_instance.mongo_server.public_ip
+    type         = "ssh"
+    user         = "ubuntu"
+    private_key  = var.private_key
+    bastion_host = var.bastion_host == "" ? var.bastion_host : ""
+    agent        = true
   }
 
   provisioner "file" {
