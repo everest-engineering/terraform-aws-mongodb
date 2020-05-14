@@ -13,6 +13,7 @@ import (
 )
 
 func TestTerraformMongoExample(t *testing.T) {
+	t.Skip("Skipping tests for now.")
 	t.Parallel()
 	terraformOptions := &terraform.Options{
 		TerraformDir: "../examples",
