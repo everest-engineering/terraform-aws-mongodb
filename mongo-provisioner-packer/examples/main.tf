@@ -12,7 +12,6 @@ module "bastion_network" {
 }
 
 resource "aws_instance" "vm" {
-  count                       = 1
   ami                         = "ami-0b44050b2d893d5f7"
   instance_type               = "t2.micro"
   subnet_id                   = module.bastion_network.bastion_public_subnet_id

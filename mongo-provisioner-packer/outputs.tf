@@ -42,7 +42,3 @@ output "tags" {
   description = "List of tags of instances"
   value       = aws_instance.mongodb.tags
 }
-
-output "mongo_connect_url" {
-  value = "mongodb://${aws_instance.mongodb.public_ip}:27017"
-}
