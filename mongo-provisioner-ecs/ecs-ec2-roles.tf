@@ -1,14 +1,10 @@
 resource "aws_iam_instance_profile" "default" {
-  name = join("", [
-    var.name,
-    "-ecs-instance-profile"])
+  name = join("", [var.name, "-ecs-instance-profile"])
   role = aws_iam_role.ecs-ec2-role.name
 }
 
 resource "aws_iam_role" "ecs-ec2-role" {
-  name = join("", [
-    var.name,
-    "ecs-instance-role"])
+  name = join("", [var.name, "ecs-instance-role"])
   path = "/ecs/"
 
   assume_role_policy = <<EOF
@@ -28,9 +24,7 @@ EOF
 }
 
 resource "aws_iam_role" "ecs-task-execution-role" {
-  name = join("", [
-    var.name,
-    "ecs-task-role"])
+  name = join("", [var.name, "ecs-task-role"])
   path = "/ecs/"
 
   assume_role_policy = <<EOF
@@ -86,21 +80,21 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "ecs-task-ebs-policy-attachment" {
-  role = aws_iam_role.ecs-task-execution-role.id
+  role       = aws_iam_role.ecs-task-execution-role.id
   policy_arn = aws_iam_policy.ecs-ebs-policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "ecs-ec2-container-service-policy-attachement" {
-  role = aws_iam_role.ecs-ec2-role.id
+  role       = aws_iam_role.ecs-ec2-role.id
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }
 
 resource "aws_iam_role_policy_attachment" "ecs-ec2-ssm-policy-attachement" {
-  role = aws_iam_role.ecs-ec2-role.id
+  role       = aws_iam_role.ecs-ec2-role.id
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 resource "aws_iam_role_policy_attachment" "ecs-ec2-ebs-policy-attachment" {
   policy_arn = aws_iam_policy.ecs-ebs-policy.arn
-  role = aws_iam_role.ecs-ec2-role.id
+  role       = aws_iam_role.ecs-ec2-role.id
 }
