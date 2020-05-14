@@ -29,7 +29,7 @@ resource "aws_security_group" "bastion_sg" {
   }
 
   tags = {
-    Name        = "bastion-sg"
+    Name = "bastion-sg"
   }
 }
 
@@ -82,6 +82,6 @@ resource "aws_security_group" "bastion_private_sg" {
   }
 
   tags = {
-    Name        = "bastion-private-sg"
+    Name = "bastion-private-sg"
   }
 }
