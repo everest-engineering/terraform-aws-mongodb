@@ -42,10 +42,10 @@ variable "mongodb_version" {
   default     = "4.2"
 }
 
-variable "environment_tag" {
-  type        = string
-  description = "Environment tag"
-  default     = "Production"
+variable "tags" {
+  type        = map(string)
+  description = "Tags"
+  default     = {}
 }
 
 variable "public_key" {
@@ -61,5 +61,16 @@ variable "private_key" {
 variable "bastion_host" {
   type        = string
   description = "Bastion host IP"
-  default = ""
+  default     = ""
+}
+
+variable "ami_owners" {
+  type        = list(string)
+  description = "AMI owners filter"
+  default     = ["self", "amazon", "aws-marketplace"]
+}
+
+variable "ssh_user" {
+  type        = string
+  description = "SSH user name"
 }

@@ -8,14 +8,19 @@ module "mongodb" {
   vpc_id            = var.vpc_id
   subnet_id         = var.subnet_id
   instance_type     = "t2.micro"
+  ssh_user          = "ubuntu"
   ami_filter_name   = "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"
+  ami_owners        = ["099720109477"]
   ebs_volume_id     = var.ebs_volume_id
   availability_zone = var.availability_zone
   mongodb_version   = "4.2"
   private_key       = file("~/.ssh/id_rsa")
   public_key        = file("~/.ssh/id_rsa.pub")
   bastion_host      = var.bastion_host
-  environment_tag   = "terraform-mongo-test"
+  tags = {
+    Name        = "MongoDB Server"
+    Environment = "terraform-mong-testing"
+  }
 }
 
 variable "availability_zone" {
