@@ -1,5 +1,5 @@
 provider "aws" {
-  region  = "us-east-1"
+  region = "us-east-1"
 }
 
 resource "aws_ebs_volume" "mongo-data-vol" {
@@ -14,8 +14,8 @@ resource "aws_ebs_volume" "mongo-data-vol" {
 }
 
 resource "aws_instance" "my_bastion_host" {
-  ami           = var.bastion_host_ami
-  instance_type = "t2.micro"
+  ami                         = var.bastion_host_ami
+  instance_type               = "t2.micro"
   associate_public_ip_address = true
 
   # the VPC subnet

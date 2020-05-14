@@ -5,7 +5,7 @@ mongo-provisioner-ecs/examples/.terraform
 .terraform
 *.tfstate
 *.tfstate.*
-config.tfvars
+terraform.tfvars
 
 #IDE files
 .idea
