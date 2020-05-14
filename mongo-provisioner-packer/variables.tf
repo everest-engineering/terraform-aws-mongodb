@@ -48,18 +48,18 @@ variable "tags" {
 
 variable "platform" {
   description = "A base image for EC2 mongo instance"
-  type = string
-  default="ubuntu-18.04"
+  type        = string
+  default     = "ubuntu-18.04"
 }
 
 variable "mongodb_version" {
   description = "Mongo version for base image"
-  type = string
-  default = "4.2"
+  type        = string
+  default     = "4.2"
 }
 
 variable "ami_version" {
   description = "version of ami image"
-  type = string
-  default = "1.0"
+  type        = string
+  default     = "1.0"
 }

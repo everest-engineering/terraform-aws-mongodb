@@ -1,37 +1,40 @@
 {
-	"variables": {
-			"region":         "ap-south-1",
-			"base_ami": "ami-0fd7e4b8e94538bef",
-			"mongo_version": "4.2",
-			"version": "v1.0"
-	},
-	"builders": [
-			{
-					"access_key": "{{user `aws_access_key`}}",
-					"ami_name": "ubuntu-18.04_mongodb-{{user `mongo_version`}}_{{user `version`}}",
-					"instance_type": "t3.micro",
-					"region": "{{user `region`}}",
-					"secret_key": "{{user `aws_secret_key`}}",
-					"source_ami":"{{user `base_ami`}}", 
-					"ssh_username": "ubuntu",
-					"tags": {
-						"OS_Version": "Ubuntu"      
-					},
-					"type": "amazon-ebs"
-			}
-	],
-	"provisioners": [
-		{
-			"type": "shell",
-			"script": "./scripts/shutdown-apt-services.sh"
-	},
-		{
-					"type": "shell",
-					"environment_vars": [
-						"MONGO_VERSION={{user `mongo_version`}}"
-					],
-					"script": "./scripts/provisioning.sh",
-					"pause_before": "10s"
-			}
-	]
+  "variables": {
+    "region": "ap-south-1",
+    "base_ami": "ami-0fd7e4b8e94538bef",
+    "mongo_version": "4.2",
+    "version": "v2.0"
+  },
+  "builders": [
+    {
+      "access_key": "{{user `aws_access_key`}}",
+      "ami_name": "ubuntu-18.04_mongodb-{{user `mongo_version`}}_{{user `version`}}",
+      "instance_type": "t3.micro",
+      "region": "{{user `region`}}",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "source_ami": "{{user `base_ami`}}",
+      "ssh_username": "ubuntu",
+      "tags": {
+        "OS_Version": "Ubuntu"
+      },
+      "type": "amazon-ebs"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "./scripts/shutdown-apt-services.sh"
+    },
+    {
+      "type": "file",
+      "source": "./scripts/conf/mongod.conf",
+      "destination": "/tmp/mongod.conf"
+    },
+    {
+      "type": "shell",
+      "environment_vars": ["MONGO_VERSION={{user `mongo_version`}}"],
+      "script": "./scripts/provisioning.sh",
+      "pause_before": "10s"
+    }
+  ]
 }
