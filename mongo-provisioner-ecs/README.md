@@ -60,31 +60,31 @@ module "mongo_ecs_ec2_cluster" {
 Find an example of ECS cluster for mongo [here](examples/mongo_cluster.tf)
 ## Inputs
 
-| Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| name | Name to be used on all the resources as identifier | string | `n/a` | yes |
-| security_group_id | Id of the security group to attach to mongo instance | string | `n/a` | yes |
-| subnet_id | Id of subnet to create mongo instance in (Private subnet recommended)  | string | `n/a` | yes |
-| ebs_volume_size | Size of EBS volume to be used by mongo container | number | `n/a` | yes |
-| ebs_volume_type | Type of EBS volume to be used by mongo container | string | `n/a` | yes |
-| instance_type | Type of EC2 instance to be used by ECS cluster for mongo task | string | `n/a` | yes |
-| region | Region to be used for creating all the above resources | string | `n/a` | yes |
-| stage | Stage of the deployment | string | `n/a` | yes |
-| mongo_container_cpu | CPU capacity to be allocated for mongo container | number | `n/a` | yes |
-| mongo_container_memory | Memory to be allocated for mongo container | number | `n/a` | yes |
-| mongo_version | Version tag of mongo docker image | string | `n/a` | yes |
-| tags | A map of default tags to add to all resources | map | {} | no |
+| Name                      | Description                                                            | Type   | Default | Required |
+|---------------------------|------------------------------------------------------------------------|:------:|:-------:|:--------:|
+| name                      | Name to be used on all the resources as identifier                     | string | `n/a`   | yes      |
+| security_group_id         | Id of the security group to attach to mongo instance                   | string | `n/a`   | yes      |
+| subnet_id                 | Id of subnet to create mongo instance in (Private subnet recommended)  | string | `n/a`   | yes      |
+| ebs_volume_size           | Size of EBS volume to be used by mongo container                       | number | `n/a`   | yes      |
+| ebs_volume_type           | Type of EBS volume to be used by mongo container                       | string | `n/a`   | yes      |
+| instance_type             | Type of EC2 instance to be used by ECS cluster for mongo task          | string | `n/a`   | yes      |
+| region                    | Region to be used for creating all the above resources                 | string | `n/a`   | yes      |
+| stage                     | Stage of the deployment                                                | string | `n/a`   | yes      |
+| mongo_container_cpu       | CPU capacity to be allocated for mongo container                       | number | `n/a`   | yes      |
+| mongo_container_memory    | Memory to be allocated for mongo container                             | number | `n/a`   | yes      |
+| mongo_version             | Version tag of mongo docker image                                      | string | `n/a`   | yes      |
+| tags                      | A map of default tags to add to all resources                          | map    | {}      | no       |
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-|ecs\_cluster\_arn | The `arn` of mongo ECS cluster  |
-|ecs\_cluster\_name | The `name` of mongo ECS cluster  |
-|ecs\_cluster\_region | The `region` where mongo ECS cluster is created |
-|mongo\_instance\_private\_ip | The private `IPV4` address of mongo instance to connect to mongodb  |
-|mongo\_instance\_public\_ip | The public `IPV4` address of mongo instance to connect to mongodb (If created in public subnet)  |
+| Name                        | Description                                                                                    |
+|-----------------------------|------------------------------------------------------------------------------------------------|
+|ecs\_cluster\_arn            | The `arn` of mongo ECS cluster                                                                 |
+|ecs\_cluster\_name           | The `name` of mongo ECS cluster                                                                |
+|ecs\_cluster\_region         | The `region` where mongo ECS cluster is created                                                |
+|mongo\_instance\_private\_ip | The private `IPV4` address of mongo instance to connect to mongodb                             |
+|mongo\_instance\_public\_ip  | The public `IPV4` address of mongo instance to connect to mongodb (If created in public subnet)|
 
 ## Authors
 
-Module managed by [Everest Engineering](https://github.com/everest-engineering).
+Module managed by [EverestEngineering](https://github.com/everest-engineering).
