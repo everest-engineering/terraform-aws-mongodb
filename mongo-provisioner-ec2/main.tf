@@ -1,89 +1,34 @@
-data "aws_ami" "ami" {
-  most_recent = true
-
-  filter {
-    name = "name"
-    values = [
-    var.ami_filter_name]
-  }
-
-  filter {
-    name = "virtualization-type"
-    values = [
-    "hvm"]
-  }
-
-  filter {
-    name = "root-device-type"
-    values = [
-    "ebs"]
-  }
-  owners = [
-  "099720109477"]
-  # Canonical
+locals {
+  ami_id = var.ami_id == "" ? data.aws_ami.ami.id : var.ami_id
+  public_key_name = "mongo-publicKey"
+  device_name = "/dev/xvdh"
+  ansible_host_group = ["db-mongodb"]
 }
 
 data "aws_vpc" "selected_vpc" {
   id = var.vpc_id
 }
 
-resource "aws_security_group" "sg_mongodb" {
-  name   = "sg_mongodb"
-  vpc_id = data.aws_vpc.selected_vpc.id
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "SSH access"
-  }
-
-  ingress {
-    from_port = 27017
-    to_port   = 27017
-    protocol  = "tcp"
-    cidr_blocks = [
-    "0.0.0.0/0"]
-    description = "MongoDB access"
-  }
-
-  egress {
-    from_port = 0
-    to_port   = 0
-    protocol  = "-1"
-    cidr_blocks = [
-    "0.0.0.0/0"]
-  }
-  tags = {
-    Name        = var.environment_tag
-    Environment = var.environment_tag
-  }
-}
-
 resource "aws_key_pair" "mongo_keypair" {
-  key_name   = "mongo-publicKey"
+  key_name   = local.public_key_name
   public_key = var.public_key
 }
 
 resource "aws_instance" "mongo_server" {
-  ami                    = var.ami_id == "" ? data.aws_ami.ami.id : var.ami_id
+  ami                    = local.ami_id
   instance_type          = var.instance_type
   subnet_id              = var.subnet_id
   vpc_security_group_ids = [aws_security_group.sg_mongodb.id]
   key_name               = aws_key_pair.mongo_keypair.key_name
   availability_zone      = var.availability_zone
-
-  tags = {
-    Name        = var.environment_tag
-    Environment = var.environment_tag
-  }
+  tags                   = var.tags
 
   connection {
-    host         = var.bastion_host == "" ? self.private_ip: self.public_ip
+    host         = var.bastion_host == "" ? self.public_ip : self.private_ip
     type         = "ssh"
-    user         = "ubuntu"
+    user         = var.ssh_user
     private_key  = var.private_key
-    bastion_host = length(var.bastion_host) > 0 ? var.bastion_host : ""
+    bastion_host = var.bastion_host
     agent        = true
   }
 
@@ -102,18 +47,18 @@ resource "aws_instance" "mongo_server" {
 }
 
 resource "aws_volume_attachment" "mongo-data-vol-attachment" {
-  device_name = "/dev/xvdh"
+  device_name = local.device_name
   volume_id   = var.ebs_volume_id
   instance_id = aws_instance.mongo_server.id
 
   skip_destroy = true
 
   connection {
-    host         = var.bastion_host == "" ? aws_instance.mongo_server.private_ip: aws_instance.mongo_server.public_ip
+    host         = var.bastion_host == "" ? aws_instance.mongo_server.public_ip : aws_instance.mongo_server.private_ip
     type         = "ssh"
-    user         = "ubuntu"
+    user         = var.ssh_user
     private_key  = var.private_key
-    bastion_host = var.bastion_host == "" ? var.bastion_host : ""
+    bastion_host = var.bastion_host
     agent        = true
   }
 
@@ -137,7 +82,7 @@ resource "aws_volume_attachment" "mongo-data-vol-attachment" {
       extra_vars = {
         mongodb_version = var.mongodb_version
       }
-      groups = ["db-mongodb"]
+      groups = local.ansible_host_group
     }
   }
 }
