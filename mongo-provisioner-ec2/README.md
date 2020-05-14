@@ -18,7 +18,7 @@ rename it to **terraform-provisioner-ansible** and place it in **~/.terraform.d/
 `> ansible-galaxy install undergreen.mongodb --ignore-errors --ignore-certs`
 
 ### 3. SSH Keys
-User needs to provide SSH keys for the **terraform-provider-mongodb** module to perform remote provisioning.
+User needs to provide SSH keys for the **terraform-mongodb-provisioning** module to perform remote provisioning.
 
 You can generate SSH keys using the following command:
 
@@ -33,77 +33,32 @@ So a better approach would be to store MongoDB data on externally created EBS vo
 
 > Note: To attach EBS volume to an EC2 instance they both need to be in same availability_zone.
 
-You can provision EBS volume as follows:
-
-* Configure **region**, **availability_zone**, **volume type**, **volume size** as in **ebs-onetime-setup/main.tf** as follows:
-
-```hcl-terraform
-provider "aws" {
-  region  = "us-east-1"
-}
-
-resource "aws_ebs_volume" "mongo-data-vol" {
-  availability_zone = var.availability_zone
-  type              = "gp2"
-  size              = "10"
-
-  tags = {
-    Name        = "mongo-data-ebs-volume"
-  }
-}
-```
-
-* **Create EBS volume:**
-
-```shell script
-cd ebs-onetime-setup
-ebs-onetime-setup> terraform apply
-...
-...
-Outputs:
-
-availability_zone = us-east-1a
-ebs-vol-id = vol-XXXXXXXXXXXXXXXX
-```
-
 ## How to use this module?
+We can use this module to provision MongoDB server either in public subnet or in a private subnet.
 
-Use the `ebs-vol-id` and `availability_zone` output values from previous step and configure them as local variables.
+### 1. Provision MongoDB in Public Subnet
 
-1. Create a file **terraform-mongo-example/main.tf** as follows:
+If we want to provision MongoDB in a public subnet then MongoDB server can be provisioned using SSH directly
+without requiring bastion host as follows: 
 
 ```hcl-terraform
-provider "aws" {
-  region  = "us-east-1"
-  profile = "terraform-provisioner-ansible"
-}
-
-locals {
-  availability_zone = "us-east-1a"
-  ebs_volume_id     = "vol-XXXXXXXXXXXXXXXX"
-}
-
-data "aws_vpc" "default" {
-  default = true
-}
-
-data "aws_subnet" "subnet" {
-  vpc_id = data.aws_vpc.default.id
-  availability_zone = local.availability_zone
-}
-
 module "mongodb" {
   source            = "path/to/module"
-  vpc_id            = data.aws_vpc.default.id
-  subnet_id         = data.aws_subnet.subnet.id
+  vpc_id            = var.vpc_id
+  subnet_id         = var.subnet_id
+  ssh_user          = "ubuntu"
   instance_type     = "t2.micro"
   ami_filter_name   = "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"
-  ebs_volume_id     = local.ebs_volume_id
-  availability_zone = local.availability_zone
+  ami_owners        = ["099720109477"]
+  ebs_volume_id     = var.ebs_volume_id
+  availability_zone = var.availability_zone
   mongodb_version   = "4.2"
   private_key       = file("~/.ssh/id_rsa")
   public_key        = file("~/.ssh/id_rsa.pub")
-  environment_tag   = "terraform-mongo-test"
+  tags = {
+      Name        = "MongoDB Server"
+      Environment = "terraform-mong-testing"
+  }
 }
 
 output "mongo_server_public_ip" {
@@ -112,53 +67,37 @@ output "mongo_server_public_ip" {
 output "mongo_server_private_ip" {
   value = module.mongodb.mongo_server_private_ip
 }
-
 ```
 
-> Note:  If the specified subnet is a public subnet then MongoDB server can be provisioned using SSH directly. 
-If the specified subnet is a private subnet then a Bastion host(a.k.a Jump host) IP address needs to be provided 
-in order to provision MongoDB using SSH.
+For more details see Example 1 - [mongodb-in-public-subnet](examples/mongodb-in-public-subnet)
+
+### 2. Provision MongoDB in Private Subnet
+If we want to provision MongoDB in a private subnet then a Bastion host(a.k.a Jump host) 
+is required to provision MongoDB using SSH.
 
 ```hcl-terraform
 module "mongodb" {
   source            = "path/to/module"
   vpc_id            = data.aws_vpc.default.id
   subnet_id         = data.aws_subnet.subnet.id
+  ssh_user          = "ubuntu"
   instance_type     = "t2.micro"
   ami_filter_name   = "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"
+  ami_owners        = ["099720109477"]
   ebs_volume_id     = local.ebs_volume_id
   availability_zone = local.availability_zone
   mongodb_version   = "4.2"
   private_key       = file("~/.ssh/id_rsa")
   public_key        = file("~/.ssh/id_rsa.pub")
   bastion_host      = "BASTION_HOST_IP_HERE"
-  environment_tag   = "terraform-mongo-test"
+  tags = {
+        Name        = "MongoDB Server"
+        Environment = "terraform-mong-testing"
+  }
 }
 ```
 
-2. Configure AWS Credentials as environment variables:
-
-```shell script
-export AWS_ACCESS_KEY_ID="ACCESS_KEY_HERE"
-export AWS_SECRET_ACCESS_KEY="SECRET_ACCESS_KEY_HERE"
-export AWS_DEFAULT_REGION="REGION_HERE"
-```
-
-3. Provision MongoDB on AWS:
-
-```shell script
-cd terraform-provider-mongodb/examples/mongodb-in-public-subnet
-terraform init
-terraform plan
-terraform apply
-```
-
-4. Destroy the provisioned infrastructure:
-
-```shell script
-cd terraform-provider-mongodb/examples/mongodb-in-public-subnet
-terraform destroy
-```
+For more details see Example 2 - [mongodb-in-private-subnet](examples/mongodb-in-private-subnet)
 
 ### Inputs
 | Name              | Description                               | Type  | Default | Required | 
@@ -169,12 +108,14 @@ terraform destroy
 | availability_zone | The availability zone in which EC2 should be provisioned. This should be same as EBS volume AZ | 	string	 | n/a | 	yes
 | private_key       | Path to private key file                  |   string | n/a | yes
 | public_key        | Path to public key file                   |   string | n/a | yes
+| ssh_user          | SSH user name                             |   string | n/a | yes
 | bastion_host      | Bastion host Public IP                    |   string | n/a | yes
 | instance_type	    | The type of instance to start             | 	string | "t2.micro"	 | no
 | ami	            | ID of AMI to use for the instance         | 	string | ""	 | no
 | ami_filter_name   | AMI selection filter by name. This will be ignored if `ami` value is specified | 	string | "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*" | 	no
+| ami_owners        | AMI owners filter criteria                | 	list(string) | `["self", "amazon", "aws-marketplace"]` | 	no
 | mongodb_version   | MongoDB version to install                | 	string | "4.2" | 	no
-| environment_tag   | Tag for EC2                               |   string | "Production" | no
+| tags              | Tag for EC2                               |   map(string) | {} | no
 
 ### Outputs
 
@@ -183,12 +124,16 @@ terraform destroy
 | mongo_server_public_ip    | Public IP of provisioned MongoDB server | 
 | mongo_server_private_ip   | Private IP of provisioned MongoDB server | 
 
+
 ## Testing
 
 1. Install Go https://golang.org/doc/install
 2. Configure AWS Credentials as environment variables as mentioned above.
 
 ```shell script
-cd test
+cd mongo-provisioner-ec2/test
 go test -v
 ```
+
+Managed by <br>
+[![License: EverestEngineering](https://img.shields.io/badge/Copyright%20%C2%A9-EVERESTENGINEERING-blue)](https://everest.engineering)
