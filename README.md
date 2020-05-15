@@ -32,6 +32,17 @@ uses a docker plugin called `rexray/ebs` to provision and use EBS volume for per
 **Find out more about this approach [here](mongo-provisioner-ecs)**
 
 ## Approach 3: Mongo Provisioning using Packer and EC2
+This approcah creates pre configured mongo AMIs using packer tool. 
+Then it provisions the mongodb instances from pre configured AMIs in private subnet.
+![MongoDB on EC2 Instances](images/Mongo-Packer.png)
+#### Pros:
+1. It creates immutable infrastructure.
+2. Easy version upgrades.
+3. Minimal configuration needed when we move to other cloud providers.
+
+##### Cons:
+1. Maintaining the pre configured AMIs.
+
 **Find out more about this approach [here](mongo-provisioner-packer)**
 
 ## Authors
