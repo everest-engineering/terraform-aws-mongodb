@@ -134,6 +134,7 @@ For more details see Example 2 - [mongodb-in-private-subnet](examples/mongodb-in
 cd mongo-provisioner-ec2/test
 go test -v
 ```
+## Authors
+>Talk to us `hi@everest.engineering`.
 
-Managed by <br>
 [![License: EverestEngineering](https://img.shields.io/badge/Copyright%20%C2%A9-EVERESTENGINEERING-blue)](https://everest.engineering)

@@ -34,6 +34,7 @@ uses a docker plugin called `rexray/ebs` to provision and use EBS volume for per
 ## Approach 3: Mongo Provisioning using Packer and EC2
 **Find out more about this approach [here](mongo-provisioner-packer)**
 
+## Authors
+>Talk to us `hi@everest.engineering`.
 
-Managed by <br>
 [![License: EverestEngineering](https://img.shields.io/badge/Copyright%20%C2%A9-EVERESTENGINEERING-blue)](https://everest.engineering)
