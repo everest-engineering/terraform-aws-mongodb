@@ -2,7 +2,6 @@ package test
 
 import (
 	"context"
-	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
@@ -14,8 +13,10 @@ import (
 	"testing"
 	"time"
 )
+
 var region string
 var name string
+
 func TestTerraformExample(t *testing.T) {
 	t.Parallel()
 	terraformOptions := &terraform.Options{
@@ -29,12 +30,12 @@ func TestTerraformExample(t *testing.T) {
 	region = terraform.Output(t, terraformOptions, "cluster_region")
 	name = terraform.Output(t, terraformOptions, "cluster_name")
 	connectionString := "mongodb://" + publicIp + ":27017"
-	fmt.Println(connectionString)
-	ctx, _ := context.WithTimeout(context.Background(), 25*time.Second)
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(connectionString))
+	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	client, err := mongo.Connect(ctx,
+		options.Client().ApplyURI(connectionString), options.Client().SetServerSelectionTimeout(30*time.Second))
 	assert.Nil(t, err)
 
-	ctx, _ = context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, _ = context.WithTimeout(context.Background(), 1*time.Minute)
 	err = client.Ping(ctx, readpref.Primary())
 	assert.Nil(t, err)
 }
