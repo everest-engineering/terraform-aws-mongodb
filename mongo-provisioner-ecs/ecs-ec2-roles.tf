@@ -23,26 +23,6 @@ resource "aws_iam_role" "ecs-ec2-role" {
 EOF
 }
 
-resource "aws_iam_role" "ecs-task-execution-role" {
-  name = join("", [var.name, "ecs-task-role"])
-  path = "/ecs/"
-
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": ["ecs-tasks.amazonaws.com"]
-      },
-      "Effect": "Allow"
-    }
-  ]
-}
-EOF
-}
-
 resource "aws_iam_policy" "ecs-ebs-policy" {
   name = "MongoEBSFullAccess"
 
@@ -77,11 +57,6 @@ resource "aws_iam_policy" "ecs-ebs-policy" {
     ]
 }
 EOF
-}
-
-resource "aws_iam_role_policy_attachment" "ecs-task-ebs-policy-attachment" {
-  role       = aws_iam_role.ecs-task-execution-role.id
-  policy_arn = aws_iam_policy.ecs-ebs-policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "ecs-ec2-container-service-policy-attachement" {
