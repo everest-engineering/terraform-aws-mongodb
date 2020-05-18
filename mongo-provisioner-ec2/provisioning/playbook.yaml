@@ -1,8 +1,0 @@
-- hosts: db-mongodb
-  become: true
-  roles:
-    - role: undergreen.mongodb
-      mongodb_security_javascript_enabled: true
-      mongodb_net_bindip: 0.0.0.0
-      mongodb_storage_dbpath: /mongodata/data/db
-      mongodb_systemlog_path: /mongodata/var/log/mongodb/{{ mongodb_daemon_name }}.log
