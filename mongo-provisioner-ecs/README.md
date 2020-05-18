@@ -85,6 +85,8 @@ Find an example of ECS cluster for mongo [here](examples/mongo_cluster.tf)
 |mongo\_instance\_private\_ip | The private `IPV4` address of mongo instance to connect to mongodb                             |
 |mongo\_instance\_public\_ip  | The public `IPV4` address of mongo instance to connect to mongodb (If created in public subnet)|
 
-## Authors
 
-Module managed by [EverestEngineering](https://github.com/everest-engineering).
+## Authors
+>Talk to us `hi@everest.engineering`.
+
+[![License: EverestEngineering](https://img.shields.io/badge/Copyright%20%C2%A9-EVERESTENGINEERING-blue)](https://everest.engineering)

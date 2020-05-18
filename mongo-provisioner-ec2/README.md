@@ -171,3 +171,8 @@ terraform destroy
 cd test
 go test -v
 ```
+
+## Authors
+>Talk to us `hi@everest.engineering`.
+
+[![License: EverestEngineering](https://img.shields.io/badge/Copyright%20%C2%A9-EVERESTENGINEERING-blue)](https://everest.engineering)
