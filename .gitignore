@@ -1,7 +1,3 @@
-# ECS Approach
-mongo-provisioner-ecs/examples/backend.tf
-mongo-provisioner-ecs/examples/.terraform
-
 .terraform
 *.tfstate
 *.tfstate.*
