@@ -55,6 +55,9 @@ Then it provisions the mongodb instances from pre configured AMIs in private sub
 
 **Find out more about this approach [here](https://github.com/everest-engineering/terraform-mongodb-provisioning-packer)**
 
+## License
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 ## Authors
 >Talk to us `hi@everest.engineering`.
 
