@@ -8,7 +8,7 @@ This approach creates EC2 instance(s) and provision MongoDB using Ansible in the
 The mongodb data will be persisted in specified EBS volume. 
 You can provision MongoDB server either in a public subnet or in a private subnet using Bastion host.
 
-![MongoDB on EC2 Instances](https://github.com/everest-engineering/terraform-mongodb-provisioning-ec2/blob/master/images/Mongo-EC2.png)
+![MongoDB on EC2 Instances](https://github.com/everest-engineering/terraform-aws-mongodb-ec2/blob/master/images/Mongo-EC2.png)
 
 ### Pros
 1. Simplified MongoDB provisioner supporting Replication
@@ -19,13 +19,13 @@ You can provision MongoDB server either in a public subnet or in a private subne
 1. Dynamic increase/decrease of number of replica nodes is not yet supported.
 2. No out-of-the-box monitoring support.
 
-**Find out more about this approach [here](https://github.com/everest-engineering/terraform-mongodb-provisioning-ec2)**
+**Find out more about this approach [here](https://github.com/everest-engineering/terraform-aws-mongodb-ec2)**
 
 ## Approach 2: Mongo Provisioning using ECS
 
 This approach creates an ECS task for mongo and runs/manages that task on EC2 instance of provided instance type. This mongo task
 uses a docker plugin called `rexray/ebs` to provision and use EBS volume for persistent storage of mongo container. 
-![MongoDB on ECS](https://github.com/everest-engineering/terraform-mongodb-provisioning-ecs/blob/master/images/architecture.png)
+![MongoDB on ECS](https://github.com/everest-engineering/terraform-aws-mongodb-ecs/blob/master/images/architecture.png)
 #### Pros:
 1. Simplified mongo infra management with just Terraform
 2. Mongo task gets restarted automatically in case of failure
@@ -38,13 +38,13 @@ uses a docker plugin called `rexray/ebs` to provision and use EBS volume for per
 1. Rolling deployments are not supported yet due to mongo single instance limitation.
 2. EBS volume size should be chosen carefully because it is not possible to expand it later as it is managed by docker plugin
 
-**Find out more about this approach [here](https://github.com/everest-engineering/terraform-mongodb-provisioning-ecs)**
+**Find out more about this approach [here](https://github.com/everest-engineering/terraform-aws-mongodb-ecs)**
 
 ## Approach 3: Mongo Provisioning using Packer and EC2
 This approcah creates pre configured mongo AMIs using packer tool. 
 Then it provisions the mongodb instances from pre configured AMIs in private subnet.
 
-![MongoDB on Packer EC2 Instances](https://github.com/everest-engineering/terraform-mongodb-provisioning-packer/blob/master/images/Mongo-Packer.png)
+![MongoDB on Packer EC2 Instances](https://github.com/everest-engineering/terraform-aws-mongodb-packer/blob/master/images/Mongo-Packer.png)
 #### Pros:
 1. It creates immutable infrastructure.
 2. Easy version upgrades.
@@ -53,7 +53,7 @@ Then it provisions the mongodb instances from pre configured AMIs in private sub
 ##### Cons:
 1. Maintaining the pre configured AMIs.
 
-**Find out more about this approach [here](https://github.com/everest-engineering/terraform-mongodb-provisioning-packer)**
+**Find out more about this approach [here](https://github.com/everest-engineering/terraform-aws-mongodb-packer)**
 
 ## License
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
