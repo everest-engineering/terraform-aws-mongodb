@@ -1,9 +1,9 @@
-[submodule "terraform-mongodb-provisioning-ec2"]
-	path = terraform-mongodb-provisioning-ec2
-	url = git@github.com:everest-engineering/terraform-mongodb-provisioning-ec2.git
-[submodule "terraform-mongodb-provisioning-ecs"]
-	path = terraform-mongodb-provisioning-ecs
-	url = git@github.com:everest-engineering/terraform-mongodb-provisioning-ecs.git
-[submodule "terraform-mongodb-provisioning-packer"]
-	path = terraform-mongodb-provisioning-packer
-	url = git@github.com:everest-engineering/terraform-mongodb-provisioning-packer.git
+[submodule "terraform-aws-mongodb-ec2"]
+	path = terraform-aws-mongodb-ec2
+	url = git@github.com:everest-engineering/terraform-aws-mongodb-ec2.git
+[submodule "terraform-aws-mongodb-ecs"]
+	path = terraform-aws-mongodb-ecs
+	url = git@github.com:everest-engineering/terraform-aws-mongodb-ecs.git
+[submodule "terraform-aws-mongodb-packer"]
+	path = terraform-aws-mongodb-packer
+	url = git@github.com:everest-engineering/terraform-aws-mongodb-packer.git
