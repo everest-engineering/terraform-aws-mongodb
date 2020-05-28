@@ -8,7 +8,7 @@ This approach creates EC2 instance(s) and provision MongoDB using Ansible in the
 The mongodb data will be persisted in specified EBS volume. 
 You can provision MongoDB server either in a public subnet or in a private subnet using Bastion host.
 
-![MongoDB on EC2 Instances](https://github.com/everest-engineering/terraform-aws-mongodb-ec2/blob/master/images/Mongo-EC2.png)
+![MongoDB on EC2 Instances](https://github.com/everest-engineering/terraform-aws-mongodb-ec2/blob/master/images/Mongo-EC2.png?raw=true)
 
 ### Pros
 1. Simplified MongoDB provisioner supporting Replication
@@ -25,7 +25,7 @@ You can provision MongoDB server either in a public subnet or in a private subne
 
 This approach creates an ECS task for mongo and runs/manages that task on EC2 instance of provided instance type. This mongo task
 uses a docker plugin called `rexray/ebs` to provision and use EBS volume for persistent storage of mongo container. 
-![MongoDB on ECS](https://github.com/everest-engineering/terraform-aws-mongodb-ecs/blob/master/images/architecture.png)
+![MongoDB on ECS](https://github.com/everest-engineering/terraform-aws-mongodb-ecs/blob/master/images/architecture.png?raw=true)
 #### Pros:
 1. Simplified mongo infra management with just Terraform
 2. Mongo task gets restarted automatically in case of failure
@@ -44,7 +44,7 @@ uses a docker plugin called `rexray/ebs` to provision and use EBS volume for per
 This approcah creates pre configured mongo AMIs using packer tool. 
 Then it provisions the mongodb instances from pre configured AMIs in private subnet.
 
-![MongoDB on Packer EC2 Instances](https://github.com/everest-engineering/terraform-aws-mongodb-packer/blob/master/images/Mongo-Packer.png)
+![MongoDB on Packer EC2 Instances](https://github.com/everest-engineering/terraform-aws-mongodb-packer/blob/master/images/Mongo-Packer.png?raw=true)
 #### Pros:
 1. It creates immutable infrastructure.
 2. Easy version upgrades.
@@ -59,6 +59,6 @@ Then it provisions the mongodb instances from pre configured AMIs in private sub
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Authors
-[![Alt text](images/banner.png)](https://everest.engineering)
+[![EverestEngineering](https://github.com/everest-engineering/terraform-aws-mongodb/blob/master/images/banner.png?raw=true)](https://everest.engineering)
 
 [![License: EverestEngineering](https://img.shields.io/badge/Copyright%20%C2%A9-EVERESTENGINEERING-blue)](https://everest.engineering)
